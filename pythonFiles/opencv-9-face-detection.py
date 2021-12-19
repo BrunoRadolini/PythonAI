@@ -157,7 +157,7 @@ while True:
 	cv2.imshow('My Mask',myMaskSmall)
 	cv2.moveWindow('My Mask',0,height)
 	cv2.imshow('my WEBcam', frame)
-	cv2.moveWindow('my WEBcam',1920,0)
+	cv2.moveWindow('my WEBcam',0,0)
 	if evt == cv2.EVENT_LBUTTONDOWN:
 		col2 = frameHSV[yVal, xVal]
 		hueVal = col2[0]
