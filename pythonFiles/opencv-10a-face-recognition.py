@@ -1,18 +1,21 @@
 import cv2
 import face_recognition as FR
-from os import listdir
+from os import listdir, getcwd
+
 from os.path import isfile, join, splitext
 
 font = cv2.FONT_HERSHEY_SIMPLEX
-
-knownfiles = [f for f in listdir('D:/Source/Python/demoImages/known') if isfile(join('D:/Source/Python/demoImages/known', f))]
+knownSubfolder = 'demoImages\\known';
+knownFolder = join(getcwd(), knownSubfolder);
+knownfiles = [f for f in listdir(knownFolder) if isfile(join(knownFolder, f))]
 
 knownEncodings = []
 names = []
 
 for faceFile in knownfiles:
 	faceName = splitext(faceFile)[0]
-	faceFile = join('D:/Source/Python/demoImages/known', faceFile)
+	print('Loading ', faceName)
+	faceFile = join(knownFolder, faceFile)
 	faceImage = FR.load_image_file(faceFile)
 	faceLocation = FR.face_locations(faceImage)[0]
 	faceEncoding = FR.face_encodings(faceImage)[0]
@@ -20,12 +23,14 @@ for faceFile in knownfiles:
 	names.append(faceName)
 	print('Encoded ', faceName)
 
+unknownSubfolder = 'demoImages\\unknown';
+unknownFolder = join(getcwd(), unknownSubfolder);
 
-unknownfiles = [f for f in listdir('D:/Source/Python/demoImages/unknown') if isfile(join('D:/Source/Python/demoImages/unknown', f))]
+unknownfiles = [f for f in listdir(unknownFolder) if isfile(join(unknownFolder, f))]
 
 for unknownFile in unknownfiles:
 	unknownName = splitext(faceFile)[0]
-	unknownFaceFile = join('D:/Source/Python/demoImages/unknown', unknownFile)
+	unknownFaceFile = join(unknownFolder, unknownFile)
 	unknownFace = FR.load_image_file(unknownFaceFile)
 	unknownFaceBGR = cv2.cvtColor(unknownFace, cv2.COLOR_RGB2BGR)
 	unknownFaceLocations = FR.face_locations(unknownFace)
@@ -36,7 +41,7 @@ for unknownFile in unknownfiles:
 		top, right, bottom, left = faceLocation
 		print(faceLocation)
 		cv2.rectangle(unknownFaceBGR, (left, top), (right,bottom), (0,255,255), 2)
-		name = 'Unknown person'
+		name = '?'
 		matches = FR.compare_faces(knownEncodings, unknownFaceEncoding)
 		print('matches', matches)
 		if True in matches:
